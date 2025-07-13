@@ -8,6 +8,11 @@ export async function GET(req) {
   let params = url.searchParams;
   let name = params.get("name") || "You";
   return new Response(
-    data[Math.floor(Math.random() * data.length)].replaceAll("${{name}}", name)
-  );
+    data[Math.floor(Math.random() * data.length)].replaceAll(/\${{name}}( was)?/g, (_, wasPart) => {
+      if (name === "You" && wasPart) {
+        return `${name} were`;
+      }
+      return `${name}${wasPart || ""}`;
+    })
+  )
 }
